@@ -1,0 +1,101 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Data.SqlClient;
+
+namespace project1
+{
+    public partial class registration : Form
+    {
+        DataTable dt = new DataTable();
+        SqlConnection con = new SqlConnection("Data Source=LAPTOP-OQHIUNE4\\SQLEXPRESS;Initial Catalog=project_1;Integrated Security=True");
+        public registration()
+        {
+            InitializeComponent();
+        }
+
+        private void registration_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnsave_Click(object sender, EventArgs e)
+        {
+            string Name= txt1.Text;
+            string LastName= txt2.Text;
+            string Designation= txt3.Text;
+            string Email= txt4.Text;
+            string ID= txt5.Text;
+            string Address= txt6.Text;
+
+            try
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("insert into project_1(Name,LastName,Designation,Email,ID,Address)Values(@Name,@LastName,@Designation,@Email,@ID,@Address)", con);
+                cmd.Parameters.AddWithValue("@Name", Name);
+                cmd.Parameters.AddWithValue("@LastName", LastName);
+                cmd.Parameters.AddWithValue("@Designation", Designation);
+                cmd.Parameters.AddWithValue("@Email", Email);
+                cmd.Parameters.AddWithValue("@ID", ID);
+                cmd.Parameters.AddWithValue("@Address", Address);
+                cmd.ExecuteNonQuery();
+                MessageBox.Show("Data inserted");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error:" + ex.Message);
+            }
+            finally
+            {
+                con.Close();
+            }
+
+        }
+        private void DisplayData()
+        {
+            dt.Clear();
+
+            try
+            {
+                con.Open();
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM Table_1", con);
+                adapter.Fill(dt);
+                dtgrid.DataSource = dt;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            DisplayData();
+            clearData();
+            
+        }
+        private void clearData()
+        {
+            txt1.Text="";
+            txt2.Text="";
+            txt3.Text = "";
+            txt4.Text = "";
+            txt5.Text = "";
+            txt6.Text = "";
+        }
+    }
+}
