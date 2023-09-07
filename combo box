@@ -1,0 +1,61 @@
+using System;
+using System.Windows.Forms;
+using System.Data.SqlClient;
+
+namespace Project2
+{
+    public partial class Form1 : Form
+    {
+        SqlConnection con = new SqlConnection("Data Source = LAPTOP - OQHIUNE4\\SQLEXPRESS; Initial Catalog = mydb; Integrated Security = True");
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            
+            string paymentcode = comboBox1paymentSource.Text;
+            string Amount = textBox1.Text;
+            string Name = textBox2.Text;
+            string Address = textBox3.Text;
+
+          
+            try
+            {
+                con.Open();
+                
+                string insertQuery = "INSERT INTO YourTableName (PaymentCode, Amount, Name, Address) VALUES (@PaymentCode, @Amount, @Name, @Address)";
+                using (SqlCommand cmd = new SqlCommand(insertQuery, con))
+                {
+                    cmd.Parameters.AddWithValue("@PaymentCode", paymentcode);
+                    cmd.Parameters.AddWithValue("@Amount", Amount);
+                    cmd.Parameters.AddWithValue("@Name", Name);
+                    cmd.Parameters.AddWithValue("@Address", Address);
+                    cmd.ExecuteNonQuery();
+                }
+                MessageBox.Show("Data inserted successfully.");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+           
+            comboBox1paymentSource.Items.Add("A");
+            comboBox1paymentSource.Items.Add("B");
+            comboBox1paymentSource.Items.Add("C");
+            comboBox1paymentSource.Items.Add("D");
+            comboBox1paymentSource.Items.Add("H");
+        }
+    }
+}
+
